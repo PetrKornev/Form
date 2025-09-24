@@ -9,7 +9,17 @@ const RegistrationForm = () => {
   } = useForm({ mode: 'onChange' });
 
   const onSubmit = (data) => {
-    console.log(data);
+    alert(JSON.stringify(data, null, 2));
+    console.log('Успешно зарегистрировано');
+  };
+
+  const validateAge = (value) => {
+    const today = new Date();
+    const birthDate = new Date(value);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    return age >= 18 || 'Вам должно быть 18 лет или больше';
   };
 
   const ErrorMessage = (error) => (error ? <p>{error}</p> : null);
@@ -80,15 +90,7 @@ const RegistrationForm = () => {
           placeholder="Введите дату рождения"
           {...register('date', {
             required: 'Поле обязательно к заполнению',
-            validate: (value) => {
-              const today = new Date();
-              const birthDate = new Date(value);
-              let age = today.getFullYear() - birthDate.getFullYear();
-              const m = today.getMonth() - birthDate.getMonth();
-              if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate()))
-                age--;
-              return age >= 18 || 'Вам должно быть 18 лет или больше';
-            }
+            validate: validateAge
           })}
         />
         {ErrorMessage(dateError)}
@@ -121,7 +123,7 @@ const RegistrationForm = () => {
           })}
         />
         {ErrorMessage(telephoneError)}
-        <button type="submit">Отправить</button>
+        <button type="submit">Зарегистрироваться</button>
       </form>
     </div>
   );
